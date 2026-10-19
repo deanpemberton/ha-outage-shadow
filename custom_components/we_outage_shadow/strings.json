@@ -1,0 +1,11 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Wellington Outage Shadow",
+        "description": "Read-only local outage scenario predictions using Home Assistant sensors. Initial results are unvalidated.",
+        "data": {}
+      }
+    }
+  }
+}
