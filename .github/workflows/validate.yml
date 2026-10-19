@@ -1,0 +1,32 @@
+name: Validate HACS integration
+on:
+  push:
+  pull_request:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Validate Python syntax
+        run: python -m compileall -q custom_components/we_outage_shadow
+      - name: Validate JSON metadata
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          for file in ["hacs.json", "custom_components/we_outage_shadow/manifest.json", "custom_components/we_outage_shadow/strings.json"]:
+              json.loads(Path(file).read_text())
+          PY
+      - name: Test local energy and forecast engine
+        run: |
+          python - <<'PY'
+          from datetime import datetime, timezone
+          from custom_components.we_outage_shadow.energy import Battery, Interval, simulate
+          battery = Battery(13.5, 0.6, 0.05)
+          result = simulate(battery, [Interval(1, 0, 0.5)])
+          assert result.survived is True
+          assert result.final_soc_fraction < 0.6
+          PY
