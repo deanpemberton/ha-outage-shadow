@@ -80,7 +80,8 @@ class ShadowCoordinator(DataUpdateCoordinator):
                 await self.snapshot_store.record(snapshot)
             return {"results": output, "updated": now.isoformat(),
                     "demand_kw": demand, "model": "0.1.0",
-                    "validation": "unvalidated islanded load and PV"}
+                    "validation": "unvalidated islanded load and PV",
+                    "restoration": compare(output)}
         except (ValueError, TypeError, KeyError, OverflowError) as err:
             _LOGGER.warning("Outage shadow inputs unavailable: %s", err)
             return {"results": {}, "updated": dt_util.utcnow().isoformat(),
