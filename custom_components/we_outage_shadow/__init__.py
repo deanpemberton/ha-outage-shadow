@@ -8,6 +8,7 @@ from homeassistant.util import dt as dt_util
 
 from .energy import Battery, horizons
 from .forecast import from_solcast
+from .restoration import compare
 
 DOMAIN = "we_outage_shadow"
 PLATFORMS = ["sensor"]
