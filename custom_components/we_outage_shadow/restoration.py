@@ -35,10 +35,10 @@ class Evidence:
         }
 
 MELLING_2025 = Evidence("Melling (assumed)", 10,
-                        ((1, 0), (3, 5), (6, 9), (12, 10), (24, 10), (48, 10)),
+                        ((3, 5), (6, 9), (12, 10), (24, 10), (48, 10)),
                         400.0, ("MEL3", "MEL4", "MEL6", "MEL8"))
 NETWORK_2025 = Evidence("Wellington Electricity network", 208,
-                        ((1, 35), (3, 127), (6, 174), (12, 197), (24, 202), (48, 205)),
+                        ((3, 127), (6, 174), (12, 197), (24, 202), (48, 205)),
                         12602.0, ())
 
 def compare(survival: dict, evidence: Evidence = MELLING_2025) -> dict:
