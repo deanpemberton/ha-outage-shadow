@@ -37,5 +37,6 @@ class ShadowSensor(CoordinatorEntity, SensorEntity):
                 "reason": result.get("reason"),
                 "forecast_at": data.get("updated"),
                 "assumed_load_kw": data.get("demand_kw"),
+                "demand_source": data.get("demand_source"),
                 "model_version": data.get("model"),
                 "validation": data.get("validation")}
