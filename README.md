@@ -22,3 +22,9 @@ No live household telemetry, credentials, historical records, or configuration f
 ## Development
 
 Code syntax and metadata are checked by GitHub Actions. A successful syntax check is **not** a substitute for integration-level testing in Home Assistant.
+
+## Melling restoration evidence (experimental)
+
+The integration now exposes a read-only `Outage Melling restoration evidence` sensor with the audited 2025 Melling feeder-row counts (10 unplanned rows) and a network-wide reference. It does **not** estimate restoration probabilities. The assumed Melling zone for 4 Fantail Grove has not been confirmed by the distributor. The sample is too small for long-tail or storm-specific inference. No private feeder maps or home address are stored in this public repository.
+
+The feature is pending code review, integration tests and HACS update before live operation. The existing energy simulation and controls are unchanged.
