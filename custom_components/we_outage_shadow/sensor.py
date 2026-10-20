@@ -11,7 +11,26 @@ async def async_setup_entry(hass, entry, async_add_entities):
         ShadowSensor(coordinator, hours, scenario)
         for hours in (6, 12, 24, 48)
         for scenario in ("p10", "p50", "p90")
+        RestorationEvidenceSensor(coordinator),
     ])
+
+
+class RestorationEvidenceSensor(CoordinatorEntity, SensorEntity):
+    """Descriptive local restoration evidence; not a probability."""
+    _attr_unique_id = f"{DOMAIN}_melling_restoration_evidence"
+    _attr_name = "Outage Melling restoration evidence"
+    _attr_icon = "mdi:transmission-tower"
+
+    def __init__(self, coordinator):
+        super().__init__(coordinator)
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("restoration", {}).get("evidence", {}).get("status", "unknown")
+
+    @property
+    def extra_state_attributes(self):
+        return self.coordinator.data.get("restoration", {})
 
 
 class ShadowSensor(CoordinatorEntity, SensorEntity):
