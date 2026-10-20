@@ -36,8 +36,11 @@ class ShadowCoordinator(DataUpdateCoordinator):
             soc = _number(self.hass, "sensor.powerwall_charge") / 100
             capacity = _number(self.hass, "input_number.outage_v1_battery_capacity")
             cutoff = _number(self.hass, "input_number.outage_v1_battery_cutoff") / 100
-            # V1 proxy is provisional and NOT an islanded measurement.
-            demand = _number(self.hass, "sensor.outage_v1_historical_expected_load")
+            # Central live post-shed estimate, measured during islanding. Fail closed
+            # if unavailable rather than silently returning optimistic survival.
+            demand = _number(self.hass, "sensor.outage_estimated_backup_load")
+            minimum = _number(self.hass, "input_number.outage_v1_minimum_load")
+            demand = max(demand, minimum)
             if demand < 0 or demand > 20:
                 raise ValueError("Invalid load")
             battery = Battery(capacity, soc, cutoff)
@@ -72,14 +75,14 @@ class ShadowCoordinator(DataUpdateCoordinator):
                     }
             snapshot = {"issued_at": now.isoformat(), "soc_fraction": soc,
                         "capacity_kwh": capacity, "cutoff_fraction": cutoff,
-                        "assumed_demand_kw": demand, "solar_fraction": 0.85,
+                        "assumed_demand_kw": demand, "demand_source": "sensor.outage_estimated_backup_load", "solar_fraction": 0.85,
                         "forecast_updated": input_times, "results": output,
                         "model": "0.1.0"}
             if hasattr(self, "snapshot_store"):
                 await self.snapshot_store.record(snapshot)
             return {"results": output, "updated": now.isoformat(),
-                    "demand_kw": demand, "model": "0.1.0",
-                    "validation": "unvalidated islanded load and PV"}
+                    "demand_kw": demand, "demand_source": "sensor.outage_estimated_backup_load", "model": "0.2.0",
+                    "validation": "live post-shed load estimate; islanded PV factor unvalidated"}
         except (ValueError, TypeError, KeyError, OverflowError) as err:
             _LOGGER.warning("Outage shadow inputs unavailable: %s", err)
             return {"results": {}, "updated": dt_util.utcnow().isoformat(),
