@@ -1,7 +1,7 @@
 {
   "domain": "we_outage_shadow",
   "name": "Wellington Outage Shadow",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "documentation": "https://github.com/deanpemberton/ha-outage-shadow",
   "codeowners": [],
   "config_flow": true,
