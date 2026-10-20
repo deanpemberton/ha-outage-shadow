@@ -1,6 +1,14 @@
 """Pure restoration evidence regression tests; no Home Assistant required."""
 import unittest
-from custom_components.we_outage_shadow.restoration import MELLING_2025, NETWORK_2025, compare
+from importlib.util import module_from_spec, spec_from_file_location
+from pathlib import Path
+import sys
+
+spec = spec_from_file_location('restoration_under_test', Path(__file__).resolve().parents[1] / 'custom_components' / 'we_outage_shadow' / 'restoration.py')
+module = module_from_spec(spec)
+sys.modules[spec.name] = module
+spec.loader.exec_module(module)
+MELLING_2025, NETWORK_2025, compare = module.MELLING_2025, module.NETWORK_2025, module.compare
 
 class TestEvidence(unittest.TestCase):
     def test_melling_counts(self):
