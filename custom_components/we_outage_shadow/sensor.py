@@ -7,12 +7,13 @@ from . import DOMAIN
 
 async def async_setup_entry(hass, entry, async_add_entities):
     coordinator = entry.runtime_data
-    async_add_entities([
+    entities = [
         ShadowSensor(coordinator, hours, scenario)
         for hours in (6, 12, 24, 48)
         for scenario in ("p10", "p50", "p90")
-        RestorationEvidenceSensor(coordinator),
-    ])
+    ]
+    entities.append(RestorationEvidenceSensor(coordinator))
+    async_add_entities(entities)
 
 
 class RestorationEvidenceSensor(CoordinatorEntity, SensorEntity):
